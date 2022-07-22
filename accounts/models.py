@@ -4,16 +4,22 @@ from .utils import CustomUserManager
 
 
 class GenderFieldChoice(models.TextChoices):
-    cisgender = ("Cisgender",)
-    transgender = ("Transgender",)
+    male = ("Male",)
+    female = ("Female",)
+    male_transgender = ("Male Transgender",)
+    female_transgender = ("Female Transgender",)
     non_binary = ("Non Binary",)
+    other = ("Other",)
 
 class TypeAccountChoice(models.TextChoices):
-    boss = ("Boss",)
-    recruiter = ("Recruiter",)
+    admin = ("Admin",)
     candidate = ("Candidate",)
     hired = ("Hired",)
-    admin = ("Admin",)
+    leader = ("Leader",)
+    recruiter = ("Recruiter",)
+    
+    
+    
 
 
 class Account(AbstractUser):
@@ -34,6 +40,11 @@ class Account(AbstractUser):
     
     is_staff_company = models.BooleanField(default=False)
 
+    curriculum = models.FileField(upload_to="curriculuns_files", blank=True, null=True)
+
+    github = models.CharField(max_length=255, null=True)
+
+    portifolio = models.CharField(max_length=255, null=True)
 
     create_at = models.DateTimeField(auto_now=True)
     update_at = models.DateTimeField(auto_now=True)
@@ -43,6 +54,8 @@ class Account(AbstractUser):
     # company = models.ForeignKey(
     # "companies.Company", on_delete=models.CASCADE, related_name="accounts", null=True
     # )
+
+    skills = models.ManyToManyField("skills.Skill", related_name="skills_users")
 
     username = None
     is_staff = None

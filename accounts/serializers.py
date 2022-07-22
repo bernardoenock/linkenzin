@@ -12,7 +12,6 @@ from .models import Account
 
 class RegisterAccountSerializer(serializers.ModelSerializer):
     address = AddressAccountSerializer(read_only=True)
-
     class Meta:
         model = Account
         fields = [
@@ -28,7 +27,7 @@ class RegisterAccountSerializer(serializers.ModelSerializer):
             "is_staff_company",
             "create_at", 
             "update_at", 
-            "address" 
+            "address"
         ]
         read_only_fields = ["id", "create_at", "update_at"]
 
@@ -38,15 +37,15 @@ class RegisterAccountSerializer(serializers.ModelSerializer):
 
         account = Account.objects.create_user(**validated_date)
 
-        type = account.type_account
-        if type == "Admin":
+        typee = account.type_account
+        if typee == "Admin":
             Account.delete(account)
             raise serializers.ValidationError({
                 "type_account": [
 		            "This field is required."
 	            ]})
 
-        if type == "Boss" or type == "Recruiter" or type == "Hired":
+        if typee == "Leader" or typee == "Recruiter" or typee == "Hired":
             Account.delete(account)
             validated_date['is_staff_company'] = True
             account = Account.objects.create_user(**validated_date)
@@ -55,10 +54,46 @@ class RegisterAccountSerializer(serializers.ModelSerializer):
 
 class ListAccountSerializer(serializers.ModelSerializer):
     address = AddressSTRSerializer(read_only=True)
+    educations = EducationSerializer(many=True, read_only=True)
+
 
     class Meta:
         model = Account
         fields = "__all__"
+
+
+    def to_representation(self, instance):
+        typee = instance.type_account
+        if typee == "Admin":
+            return {
+                'id': instance.id,
+                'is_superuser': instance.is_superuser,
+                'first_name': instance.first_name
+            }
+        elif typee == "Candidate":
+           
+            return {
+                'id': instance.id,
+                'first_name': instance.first_name
+            }
+        elif typee == "Hired":
+           
+            return {
+                'id': instance.id,
+                'first_name': instance.first_name
+            }
+        elif typee == "Leader":
+           
+            return {
+                'id': instance.id,
+                'first_name': instance.first_name
+            }
+        elif typee == "Recruiter":
+           
+            return {
+                'id': instance.id,
+                'first_name': instance.first_name
+            }
 
 
 class LoginSerializer(serializers.Serializer):
@@ -66,26 +101,5 @@ class LoginSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
 
 
-class AccountEducationSerializer(serializers.ModelSerializer):
-    address = AddressSTRSerializer(read_only=True)
-    educations = EducationSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Account
-        fields = [
-            "id",
-            "email",
-            "first_name",
-            "last_name",
-            "cpf",
-            "phone",
-            "gender", 
-            "type_account",     
-            "is_staff_company",
-            "create_at", 
-            "update_at", 
-            "address",
-            "educations" 
-        ]
 
     

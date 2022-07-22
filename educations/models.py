@@ -1,4 +1,4 @@
-import black
+
 from django.db import models
 
 # def upload_image_certificate(instance, filename):
@@ -17,7 +17,7 @@ class Education(models.Model):
     account = models.ForeignKey(
         "accounts.Account",
         on_delete=models.CASCADE,
-        related_name="account",
+        related_name="educations",
         default=None,
     )
     

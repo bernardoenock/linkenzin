@@ -11,16 +11,23 @@ class ListCreateEducationsView(generics.ListCreateAPIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [permissions.IsOwnerAccountOnly]
     
-    queryset = Education.objects.all()
     serializer_class = EducationSerializer
 
     def get_queryset(self):
-        account = get_object_or_404(Account, pk=self.request.user.id)
-        queryset = Education.objects.filter(account=account)
+        self.account = get_object_or_404(Account, id=self.request.user.id)
+
+        queryset = Education.objects.filter(account=self.account)
+        
+        
         return queryset
 
-    def perform_create(self, serializer):
-        return serializer.save(account=self.request.user)
+    def perform_create(self, serializer: EducationSerializer):
+        account = get_object_or_404(Account, id=self.request.user.id)
+        
+        
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save(account=account)
 
 class RUDEducationsView(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = [TokenAuthentication]

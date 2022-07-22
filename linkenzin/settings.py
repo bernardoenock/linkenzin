@@ -56,7 +56,7 @@ PROJECT_APPS = [
     # "companies",
     "educations",
     # "jobs",
-    # "skills",
+    "skills",
     # "documentations",
 ]
 

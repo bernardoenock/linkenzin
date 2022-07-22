@@ -41,6 +41,7 @@ class ListAllAccountsView(generics.ListAPIView):
 
     queryset = models.Account.objects.all()
     serializer_class = serializers.ListAccountSerializer
+        
 
 # GET UPDATE DELETE /api/accounts/<int:pk>
 class RUDAccountView(generics.RetrieveUpdateDestroyAPIView):
